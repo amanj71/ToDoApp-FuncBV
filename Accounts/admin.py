@@ -10,7 +10,7 @@ class MyUserAdmin(UserAdmin):
     list_display = ('id','email', 'is_superuser', 'is_staff', 'is_active')
     list_filter = ('email', 'is_superuser', 'is_active')
     searching_field = ('email',)
-    ordering = ('email',)
+    ordering = ('id',)
     
     fieldsets = [
         (None, {"fields": ["email", "password"]}),

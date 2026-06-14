@@ -12,6 +12,8 @@ class CategorySerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(slug_field='name', queryset=Category.objects.all())
     author = serializers.SlugRelatedField(read_only=True, slug_field='profile_user__email')
+    # importance = serializers.CharField(source='get_importance_display')
+    # status = serializers.CharField(source='get_status_display')
     class Meta:
         model = Task
         fields = ['id','author', 'title', 'status', 'category', 'importance', 'created_date',
@@ -27,6 +29,7 @@ class TaskSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         request = self.context.get('request')
+        # remove some fields in list data and add them in single data details
         if request.parser_context.get('kwargs').get('pk'): #this if statement determines our request is for getting a single object or a list of objects
             representation
         else:
@@ -34,6 +37,10 @@ class TaskSerializer(serializers.ModelSerializer):
             for field in not_show_fields:
                 representation.pop(field)
         representation['category'] = CategorySerializer(instance.category).data #show both id & name of foriegnkey field
+        
+        # Dynamically swap out the short codes for the human-readable labels
+        representation['importance'] = instance.get_importance_display()
+        representation['status'] = instance.get_status_display()
         return representation
 
     def create(self, validated_data):

@@ -1,0 +1,112 @@
+{% extends 'api_base.html' %}
+
+{% block title %}
+Task List
+{% endblock %}
+
+{% block content %}
+
+    <h2> Task Lists Here </h2>
+    <!-- Current Task List Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 mb-0 text-dark font-weight-bold">Current Task List</h2>
+        <button class="btn btn-dark d-flex align-items-center gap-2" id="add-task-btn">
+            Add New Task <i class="bi bi-plus-lg"></i>
+        </button>
+    </div>
+
+    <!-- table of tasks  -->
+    <div id="todo-app-root">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col" class="text-secondary ps-3" style="width: 40%;">Title</th>
+                        <th scope="col" class="text-secondary" style="width: 20%;">Category</th>
+                        <th scope="col" class="text-secondary" style="width: 20%;">Importance</th>
+                        <th scope="col" class="text-secondary pe-3" style="width: 20%;">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="task-table-body">
+                    <!-- Tasks List -->
+                    <tr id="task-row-template" class="d-none">
+                        <td class="ps-3">
+                            <span class="task-title text-dark fw-semibold"> </span>
+                        </td>
+                        <td>
+                            <span class="task-category badge bg-primary px-3 py-2 fs-7" style="border-radius: 6px;"> </span>
+                        </td>
+                        <td>
+                            <span class="task-importance text-danger d-inline-flex align-items-center gap-1 fw-medium"> </span>
+                        </td>
+                        <td>
+                            <span class="task-status badge rounded-pill bg-warning text-dark d-inline-flex align-items-center gap-1 px-3 py-2"> </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+    // 1. Native Fetch tasks-list API with Vanilla JS instead of jQuery
+    fetch("/tasks/api/v0/")
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('task-table-body');
+            const template = document.getElementById('task-row-template');
+
+            for (let task of data) {
+                // 2. Clone the template row natively (true means deep clone)
+                let newRow = template.cloneNode(true);
+                
+                // 3. Modify classes and IDs natively
+                newRow.removeAttribute('id');
+                newRow.classList.remove('d-none');
+                
+                // 4. Update the text safely (textContent prevents XSS)
+                newRow.querySelector('.task-title').textContent = task.title;
+                newRow.querySelector('.task-category').textContent = task.category.name;
+                newRow.querySelector('.task-importance').textContent = task.importance;
+                newRow.querySelector('.task-status').textContent = task.status;
+                
+                // 5. Append row to the table body
+                tableBody.appendChild(newRow);
+            }
+        })
+        .catch(error => console.error("Error fetching tasks:", error));
+    </script>    
+
+{% endblock %}
+
+
+<!-- jQuery to fetch data -->
+    <script>
+        $.get( "/tasks/api/v0/", function( data ) {
+        // Target the container where rows will go
+        const $tableBody = $('#task-table-body');
+        // Target our master template row
+        const $template = $('#task-row-template');
+
+        for (let task of data) { 
+            // 1. Clone the template row
+            let $newRow = $template.clone();
+            
+            // 2. Remove the template ID and the 'd-none' visibility class
+            $newRow.removeAttr('id').removeClass('d-none');
+            
+            // 3. Find the specific classes inside this new row and inject the text
+            $newRow.find('.task-title').text(task.title);
+            $newRow.find('.task-category').text(task.category.name);
+            $newRow.find('.task-importance').text(task.importance);
+            $newRow.find('.task-status').text(task.status);
+            
+            // Optional: If you want the title to link somewhere using the task ID:
+            // $newRow.find('.task-title').wrap(`<a href="/tasks/${task.id}"></a>`);
+
+            // 4. Append the newly populated row to the table
+            $tableBody.append($newRow);
+        }
+            
+        });
+    </script>

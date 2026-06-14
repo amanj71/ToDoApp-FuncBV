@@ -7,7 +7,7 @@ from Accounts.models import Profile
 from .models import Task
 from .forms import TaskForm
 
-# Create your functionality views here.
+## Create your functionality views here.
 @login_required
 def task_list(request):
     profile_determine = Profile.objects.get(profile_user=request.user)
@@ -65,3 +65,13 @@ def task_delete(request, pk):
         return redirect('/tasks/')
     else:
         raise PermissionDenied('You Can Not Delete This Task!')
+    
+## Create API views here
+
+def api_task_list(request):
+    return render(request, 'tasks/api_task_list.html')
+
+
+## Create Target UI Design view
+def target_design(request):
+    return render(request, 'tasks/target_design.html')
