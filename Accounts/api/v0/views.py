@@ -92,7 +92,8 @@ def resend_activation_link_api(request):
     if request.method == 'POST':
         serializer = ResendActivationLinkSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = get_object_or_404(MyUser, email=serializer.validated_data['email'])
+        # user = get_object_or_404(MyUser, email=serializer.validated_data['email'])
+        user = serializer.validated_data['user']  
         access_token = str(RefreshToken.for_user(user).access_token)
         # Context for your templates
         context = {

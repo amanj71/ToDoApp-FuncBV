@@ -7,10 +7,10 @@ class MyUserAdmin(UserAdmin):
     """
     A class to register our custom user model in django admin panel.
     """
-    list_display = ('id','email', 'is_superuser', 'is_staff', 'is_active')
+    list_display = ('email', 'is_superuser', 'is_staff', 'is_active', 'date_of_created')
     list_filter = ('email', 'is_superuser', 'is_active')
     searching_field = ('email',)
-    ordering = ('id',)
+    ordering = ('date_of_created',)
     
     fieldsets = [
         (None, {"fields": ["email", "password"]}),
@@ -31,7 +31,8 @@ class MyUserAdmin(UserAdmin):
 
 class ProfileAdmin(admin.ModelAdmin):
     model = Profile
-    list_display = ['id', 'profile_user__email', 'first_name', 'gender']
+    list_display = ['profile_user__email', 'first_name', 'gender']
+    ordering = ['date_of_joined']
 
 ## Register Your model here
 admin.site.register(MyUser, MyUserAdmin)

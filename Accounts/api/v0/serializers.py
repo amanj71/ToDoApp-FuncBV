@@ -46,7 +46,6 @@ class ChangePasswordSerializer(serializers.Serializer):
     confirm_password = serializers.CharField(required=True, write_only=True)
 
     def validate_old_password(self, value):
-        print(self.context.get('request'))
         user = self.context.get('request').user
         if not user.check_password(value):
             raise serializers.ValidationError("Your current password was entered incorrectly.")
@@ -96,5 +95,4 @@ class ResetPasswordSerializer(serializers.Serializer):
         if attrs.get('password') != attrs.get('confirm_password'):
             raise serializers.ValidationError({'details': 'Password fields didn\'t match!'})
         user = self.context.get('request')
-        print(attrs)
         return attrs

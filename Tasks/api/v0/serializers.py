@@ -33,7 +33,7 @@ class TaskSerializer(serializers.ModelSerializer):
         if request.parser_context.get('kwargs').get('pk'): #this if statement determines our request is for getting a single object or a list of objects
             representation
         else:
-            not_show_fields = ['id', 'created_date', 'edited_date', 'completed_date']
+            not_show_fields = ['created_date', 'edited_date', 'completed_date']
             for field in not_show_fields:
                 representation.pop(field)
         representation['category'] = CategorySerializer(instance.category).data #show both id & name of foriegnkey field
