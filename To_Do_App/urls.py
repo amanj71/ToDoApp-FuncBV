@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from . import views
 
 ## Implement API Documentation structure here
 schema_view = get_schema_view(
@@ -41,6 +42,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('Accounts.urls')),
     path('tasks/', include("Tasks.urls")),
+    path('', views.visit_home, name='visit-home'),
     # API Documentation path
     path('swagger.<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'), #Specific
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
