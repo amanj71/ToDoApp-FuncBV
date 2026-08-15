@@ -1,5 +1,8 @@
 from django.db import models
 from Accounts.models import Profile
+from django.contrib.auth import get_user_model
+
+MyUser = get_user_model()
 
 # Create your models here.
 class Category(models.Model):
@@ -29,5 +32,10 @@ class Task(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     edited_date = models.DateTimeField(auto_now=True)
     completed_date = models.DateTimeField(blank=True, null=True)
+
+class PageVisit(models.Model):
+    path = models.TextField(blank=True, null=True) # col
+    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(MyUser, on_delete=models.SET_NULL, null=True, blank=True)
 
     
